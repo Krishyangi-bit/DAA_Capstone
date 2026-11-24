@@ -1,0 +1,41 @@
+{
+  "name": "small",
+  "depot": "D",
+  "capacity": 24,
+  "nodes": [
+    {"id": "D", "name": "Depot",       "x": 50, "y": 50},
+    {"id": "A", "name": "Sector 14",   "x": 20, "y": 25},
+    {"id": "B", "name": "Old Market",  "x": 45, "y": 15},
+    {"id": "C", "name": "Tech Park",   "x": 80, "y": 20},
+    {"id": "E", "name": "Railway Rd",  "x": 85, "y": 55},
+    {"id": "F", "name": "Lake View",   "x": 75, "y": 85},
+    {"id": "G", "name": "Civil Lines", "x": 40, "y": 85},
+    {"id": "H", "name": "Hill Colony", "x": 12, "y": 65}
+  ],
+  "edges": [
+    {"from": "D", "to": "A", "distance": 4},
+    {"from": "D", "to": "B", "distance": 4},
+    {"from": "D", "to": "E", "distance": 4},
+    {"from": "D", "to": "G", "distance": 4},
+    {"from": "A", "to": "B", "distance": 3},
+    {"from": "A", "to": "H", "distance": 4},
+    {"from": "B", "to": "C", "distance": 4},
+    {"from": "C", "to": "E", "distance": 4},
+    {"from": "E", "to": "F", "distance": 3},
+    {"from": "F", "to": "G", "distance": 4},
+    {"from": "G", "to": "H", "distance": 4},
+    {"from": "D", "to": "C", "distance": 7}
+  ],
+  "parcels": [
+    {"id": "P01", "destination": "A", "weight": 5, "value": 50, "deadline": 2, "priority": 5},
+    {"id": "P02", "destination": "C", "weight": 8, "value": 40, "deadline": 6, "priority": 3},
+    {"id": "P03", "destination": "E", "weight": 3, "value": 35, "deadline": 2, "priority": 4},
+    {"id": "P04", "destination": "F", "weight": 6, "value": 30, "deadline": 8, "priority": 2},
+    {"id": "P05", "destination": "G", "weight": 4, "value": 45, "deadline": 3, "priority": 5},
+    {"id": "P06", "destination": "H", "weight": 7, "value": 25, "deadline": 10, "priority": 1},
+    {"id": "P07", "destination": "B", "weight": 2, "value": 20, "deadline": 4, "priority": 2},
+    {"id": "P08", "destination": "C", "weight": 4, "value": 30, "deadline": 3, "priority": 3},
+    {"id": "P09", "destination": "F", "weight": 9, "value": 55, "deadline": 5, "priority": 4},
+    {"id": "P10", "destination": "E", "weight": 1, "value": 10, "deadline": 6, "priority": 1}
+  ]
+}

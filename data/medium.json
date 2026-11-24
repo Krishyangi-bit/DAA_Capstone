@@ -1,0 +1,806 @@
+{
+  "name": "medium",
+  "depot": "D",
+  "capacity": 50,
+  "nodes": [
+    {
+      "id": "D",
+      "name": "Depot",
+      "x": 50.0,
+      "y": 50.0
+    },
+    {
+      "id": "N001",
+      "name": "Customer 1",
+      "x": 45.5,
+      "y": 55.6
+    },
+    {
+      "id": "N002",
+      "name": "Customer 2",
+      "x": 89.9,
+      "y": 46.8
+    },
+    {
+      "id": "N003",
+      "name": "Customer 3",
+      "x": 50.7,
+      "y": 58.2
+    },
+    {
+      "id": "N004",
+      "name": "Customer 4",
+      "x": 20.4,
+      "y": 51.1
+    },
+    {
+      "id": "N005",
+      "name": "Customer 5",
+      "x": 62.2,
+      "y": 77.5
+    },
+    {
+      "id": "N006",
+      "name": "Customer 6",
+      "x": 11.8,
+      "y": 31.5
+    },
+    {
+      "id": "N007",
+      "name": "Customer 7",
+      "x": 11.5,
+      "y": 79.1
+    },
+    {
+      "id": "N008",
+      "name": "Customer 8",
+      "x": 68.2,
+      "y": 6.9
+    },
+    {
+      "id": "N009",
+      "name": "Customer 9",
+      "x": 95.3,
+      "y": 93.7
+    },
+    {
+      "id": "N010",
+      "name": "Customer 10",
+      "x": 64.5,
+      "y": 60.9
+    },
+    {
+      "id": "N011",
+      "name": "Customer 11",
+      "x": 17.8,
+      "y": 4.4
+    },
+    {
+      "id": "N012",
+      "name": "Customer 12",
+      "x": 52.7,
+      "y": 8.6
+    },
+    {
+      "id": "N013",
+      "name": "Customer 13",
+      "x": 20.9,
+      "y": 25.7
+    },
+    {
+      "id": "N014",
+      "name": "Customer 14",
+      "x": 5.8,
+      "y": 46.6
+    },
+    {
+      "id": "N015",
+      "name": "Customer 15",
+      "x": 44.4,
+      "y": 82.2
+    },
+    {
+      "id": "N016",
+      "name": "Customer 16",
+      "x": 51.8,
+      "y": 63.2
+    },
+    {
+      "id": "N017",
+      "name": "Customer 17",
+      "x": 50.0,
+      "y": 65.3
+    },
+    {
+      "id": "N018",
+      "name": "Customer 18",
+      "x": 46.0,
+      "y": 29.1
+    },
+    {
+      "id": "N019",
+      "name": "Customer 19",
+      "x": 96.8,
+      "y": 96.6
+    },
+    {
+      "id": "N020",
+      "name": "Customer 20",
+      "x": 82.0,
+      "y": 69.5
+    },
+    {
+      "id": "N021",
+      "name": "Customer 21",
+      "x": 32.6,
+      "y": 24.6
+    },
+    {
+      "id": "N022",
+      "name": "Customer 22",
+      "x": 30.2,
+      "y": 9.6
+    },
+    {
+      "id": "N023",
+      "name": "Customer 23",
+      "x": 75.0,
+      "y": 40.6
+    },
+    {
+      "id": "N024",
+      "name": "Customer 24",
+      "x": 82.6,
+      "y": 39.3
+    },
+    {
+      "id": "N025",
+      "name": "Customer 25",
+      "x": 93.1,
+      "y": 82.6
+    },
+    {
+      "id": "N026",
+      "name": "Customer 26",
+      "x": 3.1,
+      "y": 22.7
+    },
+    {
+      "id": "N027",
+      "name": "Customer 27",
+      "x": 88.6,
+      "y": 47.2
+    },
+    {
+      "id": "N028",
+      "name": "Customer 28",
+      "x": 95.2,
+      "y": 40.4
+    },
+    {
+      "id": "N029",
+      "name": "Customer 29",
+      "x": 9.9,
+      "y": 62.2
+    }
+  ],
+  "edges": [
+    {
+      "from": "D",
+      "to": "N001",
+      "distance": 8.9
+    },
+    {
+      "from": "D",
+      "to": "N003",
+      "distance": 8.9
+    },
+    {
+      "from": "D",
+      "to": "N016",
+      "distance": 13.7
+    },
+    {
+      "from": "D",
+      "to": "N018",
+      "distance": 23.4
+    },
+    {
+      "from": "N001",
+      "to": "N003",
+      "distance": 7.5
+    },
+    {
+      "from": "N001",
+      "to": "N016",
+      "distance": 12.1
+    },
+    {
+      "from": "N001",
+      "to": "N017",
+      "distance": 11.1
+    },
+    {
+      "from": "N002",
+      "to": "N023",
+      "distance": 17.3
+    },
+    {
+      "from": "N002",
+      "to": "N024",
+      "distance": 10.8
+    },
+    {
+      "from": "N002",
+      "to": "N027",
+      "distance": 1.4
+    },
+    {
+      "from": "N002",
+      "to": "N028",
+      "distance": 10.3
+    },
+    {
+      "from": "N003",
+      "to": "N010",
+      "distance": 14.8
+    },
+    {
+      "from": "N003",
+      "to": "N016",
+      "distance": 6.0
+    },
+    {
+      "from": "N003",
+      "to": "N017",
+      "distance": 8.1
+    },
+    {
+      "from": "N004",
+      "to": "N006",
+      "distance": 22.6
+    },
+    {
+      "from": "N004",
+      "to": "N007",
+      "distance": 35.8
+    },
+    {
+      "from": "N004",
+      "to": "N014",
+      "distance": 15.9
+    },
+    {
+      "from": "N004",
+      "to": "N029",
+      "distance": 18.2
+    },
+    {
+      "from": "N005",
+      "to": "N010",
+      "distance": 17.3
+    },
+    {
+      "from": "N005",
+      "to": "N015",
+      "distance": 20.7
+    },
+    {
+      "from": "N005",
+      "to": "N016",
+      "distance": 18.8
+    },
+    {
+      "from": "N005",
+      "to": "N017",
+      "distance": 18.6
+    },
+    {
+      "from": "N005",
+      "to": "N020",
+      "distance": 27.6
+    },
+    {
+      "from": "N006",
+      "to": "N013",
+      "distance": 13.4
+    },
+    {
+      "from": "N006",
+      "to": "N014",
+      "distance": 17.7
+    },
+    {
+      "from": "N006",
+      "to": "N026",
+      "distance": 15.7
+    },
+    {
+      "from": "N007",
+      "to": "N014",
+      "distance": 35.1
+    },
+    {
+      "from": "N007",
+      "to": "N029",
+      "distance": 19.0
+    },
+    {
+      "from": "N008",
+      "to": "N012",
+      "distance": 19.6
+    },
+    {
+      "from": "N008",
+      "to": "N018",
+      "distance": 37.4
+    },
+    {
+      "from": "N008",
+      "to": "N023",
+      "distance": 35.4
+    },
+    {
+      "from": "N009",
+      "to": "N019",
+      "distance": 4.2
+    },
+    {
+      "from": "N009",
+      "to": "N020",
+      "distance": 29.4
+    },
+    {
+      "from": "N009",
+      "to": "N025",
+      "distance": 12.2
+    },
+    {
+      "from": "N010",
+      "to": "N016",
+      "distance": 15.9
+    },
+    {
+      "from": "N010",
+      "to": "N017",
+      "distance": 16.6
+    },
+    {
+      "from": "N010",
+      "to": "N020",
+      "distance": 21.2
+    },
+    {
+      "from": "N011",
+      "to": "N013",
+      "distance": 22.0
+    },
+    {
+      "from": "N011",
+      "to": "N022",
+      "distance": 13.8
+    },
+    {
+      "from": "N011",
+      "to": "N026",
+      "distance": 27.6
+    },
+    {
+      "from": "N012",
+      "to": "N018",
+      "distance": 23.1
+    },
+    {
+      "from": "N012",
+      "to": "N022",
+      "distance": 26.6
+    },
+    {
+      "from": "N013",
+      "to": "N021",
+      "distance": 13.1
+    },
+    {
+      "from": "N013",
+      "to": "N022",
+      "distance": 21.1
+    },
+    {
+      "from": "N013",
+      "to": "N026",
+      "distance": 23.2
+    },
+    {
+      "from": "N014",
+      "to": "N029",
+      "distance": 18.5
+    },
+    {
+      "from": "N015",
+      "to": "N016",
+      "distance": 23.9
+    },
+    {
+      "from": "N015",
+      "to": "N017",
+      "distance": 22.4
+    },
+    {
+      "from": "N016",
+      "to": "N017",
+      "distance": 2.9
+    },
+    {
+      "from": "N018",
+      "to": "N021",
+      "distance": 14.8
+    },
+    {
+      "from": "N019",
+      "to": "N020",
+      "distance": 39.3
+    },
+    {
+      "from": "N019",
+      "to": "N025",
+      "distance": 18.0
+    },
+    {
+      "from": "N020",
+      "to": "N025",
+      "distance": 18.5
+    },
+    {
+      "from": "N021",
+      "to": "N022",
+      "distance": 16.1
+    },
+    {
+      "from": "N023",
+      "to": "N024",
+      "distance": 9.4
+    },
+    {
+      "from": "N023",
+      "to": "N027",
+      "distance": 19.4
+    },
+    {
+      "from": "N024",
+      "to": "N027",
+      "distance": 10.5
+    },
+    {
+      "from": "N024",
+      "to": "N028",
+      "distance": 16.3
+    },
+    {
+      "from": "N027",
+      "to": "N028",
+      "distance": 12.0
+    }
+  ],
+  "parcels": [
+    {
+      "id": "P001",
+      "destination": "N014",
+      "weight": 2,
+      "value": 54,
+      "deadline": 2,
+      "priority": 5
+    },
+    {
+      "id": "P002",
+      "destination": "N017",
+      "weight": 1,
+      "value": 16,
+      "deadline": 4,
+      "priority": 1
+    },
+    {
+      "id": "P003",
+      "destination": "N014",
+      "weight": 5,
+      "value": 59,
+      "deadline": 8,
+      "priority": 4
+    },
+    {
+      "id": "P004",
+      "destination": "N006",
+      "weight": 9,
+      "value": 49,
+      "deadline": 3,
+      "priority": 3
+    },
+    {
+      "id": "P005",
+      "destination": "N018",
+      "weight": 8,
+      "value": 46,
+      "deadline": 10,
+      "priority": 2
+    },
+    {
+      "id": "P006",
+      "destination": "N009",
+      "weight": 2,
+      "value": 57,
+      "deadline": 4,
+      "priority": 5
+    },
+    {
+      "id": "P007",
+      "destination": "N009",
+      "weight": 2,
+      "value": 20,
+      "deadline": 8,
+      "priority": 1
+    },
+    {
+      "id": "P008",
+      "destination": "N002",
+      "weight": 1,
+      "value": 24,
+      "deadline": 5,
+      "priority": 2
+    },
+    {
+      "id": "P009",
+      "destination": "N019",
+      "weight": 9,
+      "value": 50,
+      "deadline": 2,
+      "priority": 3
+    },
+    {
+      "id": "P010",
+      "destination": "N029",
+      "weight": 3,
+      "value": 43,
+      "deadline": 6,
+      "priority": 3
+    },
+    {
+      "id": "P011",
+      "destination": "N005",
+      "weight": 10,
+      "value": 79,
+      "deadline": 1,
+      "priority": 5
+    },
+    {
+      "id": "P012",
+      "destination": "N012",
+      "weight": 8,
+      "value": 30,
+      "deadline": 1,
+      "priority": 1
+    },
+    {
+      "id": "P013",
+      "destination": "N021",
+      "weight": 10,
+      "value": 31,
+      "deadline": 8,
+      "priority": 1
+    },
+    {
+      "id": "P014",
+      "destination": "N010",
+      "weight": 12,
+      "value": 39,
+      "deadline": 3,
+      "priority": 1
+    },
+    {
+      "id": "P015",
+      "destination": "N015",
+      "weight": 2,
+      "value": 22,
+      "deadline": 6,
+      "priority": 1
+    },
+    {
+      "id": "P016",
+      "destination": "N024",
+      "weight": 12,
+      "value": 36,
+      "deadline": 6,
+      "priority": 1
+    },
+    {
+      "id": "P017",
+      "destination": "N022",
+      "weight": 2,
+      "value": 41,
+      "deadline": 2,
+      "priority": 3
+    },
+    {
+      "id": "P018",
+      "destination": "N028",
+      "weight": 1,
+      "value": 49,
+      "deadline": 10,
+      "priority": 4
+    },
+    {
+      "id": "P019",
+      "destination": "N022",
+      "weight": 10,
+      "value": 36,
+      "deadline": 7,
+      "priority": 1
+    },
+    {
+      "id": "P020",
+      "destination": "N020",
+      "weight": 1,
+      "value": 53,
+      "deadline": 2,
+      "priority": 5
+    },
+    {
+      "id": "P021",
+      "destination": "N004",
+      "weight": 11,
+      "value": 36,
+      "deadline": 7,
+      "priority": 1
+    },
+    {
+      "id": "P022",
+      "destination": "N024",
+      "weight": 7,
+      "value": 53,
+      "deadline": 8,
+      "priority": 3
+    },
+    {
+      "id": "P023",
+      "destination": "N027",
+      "weight": 8,
+      "value": 64,
+      "deadline": 2,
+      "priority": 4
+    },
+    {
+      "id": "P024",
+      "destination": "N001",
+      "weight": 9,
+      "value": 72,
+      "deadline": 10,
+      "priority": 5
+    },
+    {
+      "id": "P025",
+      "destination": "N001",
+      "weight": 8,
+      "value": 29,
+      "deadline": 12,
+      "priority": 1
+    },
+    {
+      "id": "P026",
+      "destination": "N025",
+      "weight": 8,
+      "value": 35,
+      "deadline": 11,
+      "priority": 1
+    },
+    {
+      "id": "P027",
+      "destination": "N029",
+      "weight": 5,
+      "value": 50,
+      "deadline": 6,
+      "priority": 4
+    },
+    {
+      "id": "P028",
+      "destination": "N022",
+      "weight": 3,
+      "value": 45,
+      "deadline": 4,
+      "priority": 3
+    },
+    {
+      "id": "P029",
+      "destination": "N025",
+      "weight": 3,
+      "value": 61,
+      "deadline": 11,
+      "priority": 5
+    },
+    {
+      "id": "P030",
+      "destination": "N029",
+      "weight": 8,
+      "value": 59,
+      "deadline": 6,
+      "priority": 4
+    },
+    {
+      "id": "P031",
+      "destination": "N009",
+      "weight": 11,
+      "value": 65,
+      "deadline": 11,
+      "priority": 4
+    },
+    {
+      "id": "P032",
+      "destination": "N029",
+      "weight": 4,
+      "value": 51,
+      "deadline": 7,
+      "priority": 4
+    },
+    {
+      "id": "P033",
+      "destination": "N011",
+      "weight": 10,
+      "value": 43,
+      "deadline": 3,
+      "priority": 2
+    },
+    {
+      "id": "P034",
+      "destination": "N012",
+      "weight": 8,
+      "value": 36,
+      "deadline": 12,
+      "priority": 2
+    },
+    {
+      "id": "P035",
+      "destination": "N027",
+      "weight": 5,
+      "value": 22,
+      "deadline": 2,
+      "priority": 1
+    },
+    {
+      "id": "P036",
+      "destination": "N009",
+      "weight": 8,
+      "value": 59,
+      "deadline": 7,
+      "priority": 4
+    },
+    {
+      "id": "P037",
+      "destination": "N017",
+      "weight": 11,
+      "value": 69,
+      "deadline": 11,
+      "priority": 4
+    },
+    {
+      "id": "P038",
+      "destination": "N027",
+      "weight": 12,
+      "value": 63,
+      "deadline": 8,
+      "priority": 3
+    },
+    {
+      "id": "P039",
+      "destination": "N027",
+      "weight": 2,
+      "value": 34,
+      "deadline": 5,
+      "priority": 3
+    },
+    {
+      "id": "P040",
+      "destination": "N022",
+      "weight": 1,
+      "value": 56,
+      "deadline": 10,
+      "priority": 5
+    }
+  ]
+}
