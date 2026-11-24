@@ -1,0 +1,68 @@
+MINI-COURIER PLANNER  |  dataset: large  |  120 nodes, 227 roads, 200 parcels  |  capacity 120 kg
+
+1. Parcels prioritised with merge sort  (deadline asc, priority desc, value desc)
+---------------------------------------------------------------------------------
+  #  id    dest     kg  value  deadline  prio
+  1  P191  N042     11     75        1h     5
+  2  P035  N104     12     74        1h     5
+  3  P136  N064      4     60        1h     5
+  4  P027  N010      4     58        1h     5
+  5  P120  N046      8     61        1h     4
+  6  P054  N100      3     52        1h     4
+  7  P084  N089      3     51        1h     4
+  8  P043  N084      4     48        1h     4
+  9  P153  N065      9     50        1h     3
+ 10  P024  N028      4     41        1h     3
+ 11  P135  N028      1     36        1h     3
+ 12  P031  N099      1     34        1h     3
+ 13  P100  N048     12     53        1h     2
+ 14  P198  N074     11     50        1h     2
+ 15  P138  N114     12     46        1h     2
+  ... 185 more
+
+2. Packing plan  (0/1 knapsack, dynamic programming)
+----------------------------------------------------
+Selected parcels : P136, P027, P054, P084, P135, P031, P119, P090, P040, P168, P187, P158, P032, P013, P023, P078, P121, P163, P124, P130, P051, P070, P008, P082, P179, P061, P148, P161, P183, P058, P155, P091, P111, P145, P164, P049, P050, P194, P189, P088, P160, P038, P057, P106, P159, P102, P156, P097, P053, P169
+Load             : 120 / 120 kg
+Total value      : 2400   (greedy by value/weight: 2400)
+Left for next trip: 150 parcels
+
+3. Route  (Dijkstra shortest paths + nearest-neighbour TSP)
+-----------------------------------------------------------
+Stops to visit    : 42
+Nearest-neighbour : D -> N063 -> N088 -> N018 -> N061 -> N110 -> N105 -> N029 -> N119 -> N117 -> N050 -> N037 -> N001 -> N104 -> N112 -> N062 -> N068 -> N116 -> N020 -> N083 -> N025 -> N080 -> N084 -> N041 -> N044 -> N028 -> N097 -> N010 -> N086 -> N077 -> N064 -> N021 -> N090 -> N089 -> N100 -> N039 -> N075 -> N013 -> N091 -> N095 -> N092 -> N066 -> N099 -> D  =  966.8 km
+After 2-opt       : D -> N063 -> N088 -> N018 -> N077 -> N064 -> N021 -> N089 -> N090 -> N100 -> N086 -> N010 -> N097 -> N028 -> N044 -> N041 -> N084 -> N068 -> N116 -> N020 -> N083 -> N025 -> N080 -> N062 -> N095 -> N092 -> N099 -> N066 -> N112 -> N104 -> N001 -> N037 -> N050 -> N117 -> N119 -> N029 -> N091 -> N075 -> N013 -> N039 -> N105 -> N110 -> N061 -> D  =  764.7 km
+
+Legs (road-level path from Dijkstra):
+      D -> N063      5.8 km   via D > N063  drop P040
+   N063 -> N088      9.3 km   via N063 > N088  drop P194
+   N088 -> N018      2.9 km   via N088 > N018  drop P130
+   N018 -> N077     18.2 km   via N018 > N003 > N106 > N077  drop P160
+   N077 -> N064     31.8 km   via N077 > N019 > N064  drop P136
+   N064 -> N021     24.3 km   via N064 > N021  drop P155, P102
+   N021 -> N089      8.4 km   via N021 > N030 > N089  drop P084, P148
+   N089 -> N090      1.5 km   via N089 > N090  drop P070
+   N090 -> N100      8.7 km   via N090 > N100  drop P054
+   N100 -> N086     68.2 km   via N100 > N002 > N064 > N019 > N045 > N086  drop P124
+   N086 -> N010     16.0 km   via N086 > N069 > N010  drop P027
+   N010 -> N097      6.6 km   via N010 > N097  drop P061
+   N097 -> N028      4.5 km   via N097 > N028  drop P135
+   N028 -> N044      4.2 km   via N028 > N044  drop P050, P106, P169
+   N044 -> N041      4.0 km   via N044 > N041  drop P119, P038
+   N041 -> N084     20.5 km   via N041 > N107 > N084  drop P163
+   N084 -> N068     31.6 km   via N084 > N023 > N116 > N068  drop P156
+   N068 -> N116      9.4 km   via N068 > N116  drop P158
+   N116 -> N020      7.4 km   via N116 > N020  drop P088
+   N020 -> N083      9.8 km   via N020 > N083  drop P082
+  ... 23 more legs
+
+Total route length: 764.7 km
+
+4. Runtime of each stage (ms)
+-----------------------------
+  sorting        0.570
+  knapsack       2.128
+  dijkstra       6.607
+  tsp_nn         0.166
+  two_opt        0.542
+  total         10.012

@@ -1,0 +1,21 @@
+test_against_bellman_ford_on_dataset (test_algorithms.DijkstraTests.test_against_bellman_ford_on_dataset) ... ok
+test_hand_worked_example (test_algorithms.DijkstraTests.test_hand_worked_example) ... ok
+test_matrix_is_symmetric (test_algorithms.DijkstraTests.test_matrix_is_symmetric) ... ok
+test_unreachable (test_algorithms.DijkstraTests.test_unreachable) ... ok
+test_matches_brute_force (test_algorithms.KnapsackTests.test_matches_brute_force) ... ok
+test_nothing_fits (test_algorithms.KnapsackTests.test_nothing_fits) ... ok
+test_textbook_example_where_greedy_fails (test_algorithms.KnapsackTests.test_textbook_example_where_greedy_fails) ... ok
+test_all_datasets_and_sorts (test_algorithms.PlannerTests.test_all_datasets_and_sorts) ... ok
+test_small_dataset_end_to_end (test_algorithms.PlannerTests.test_small_dataset_end_to_end) ... ok
+test_validation_rejects_bad_input (test_algorithms.PlannerTests.test_validation_rejects_bad_input) ... ok
+test_edge_cases (test_algorithms.SortingTests.test_edge_cases) ... ok
+test_input_not_modified (test_algorithms.SortingTests.test_input_not_modified) ... ok
+test_matches_builtin_on_random_lists (test_algorithms.SortingTests.test_matches_builtin_on_random_lists) ... ok
+test_merge_sort_is_stable (test_algorithms.SortingTests.test_merge_sort_is_stable) ... ok
+test_parcel_priority_order (test_algorithms.SortingTests.test_parcel_priority_order) ... ok
+test_heuristics_valid_and_not_better_than_optimum (test_algorithms.TSPTests.test_heuristics_valid_and_not_better_than_optimum) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.187s
+
+OK
