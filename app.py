@@ -109,7 +109,13 @@ def index():
         except (ValueError, UnicodeDecodeError) as exc:
             error = f"Could not read the uploaded file: {exc}"
     else:
-        raw = read_sample("small")
+        # GET links such as /?dataset=large&sort=quick&capacity=80 are shareable
+        name = request.args.get("dataset", "small")
+        form["dataset"] = name if name in SAMPLES else "small"
+        form["capacity"] = request.args.get("capacity", "").strip()
+        form["sort"] = request.args.get("sort", "merge")
+        form["two_opt"] = request.args.get("two_opt", "on") != "off"
+        raw = read_sample(form["dataset"])
 
     context = {"form": form, "samples": SAMPLES, "sorts": list(ALGORITHMS), "error": error}
     if raw is not None and error is None:
