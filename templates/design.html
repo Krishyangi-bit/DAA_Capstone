@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Design · Mini-Courier Planner{% endblock %}
+{% block content %}
+
+<div class="page-head">
+  <p class="eyebrow">Phase 1 · Problem design &amp; planning</p>
+  <h1>From a pile of parcels to a route</h1>
+  <p class="lead">A depot has more parcels than one van can carry. The planner decides which parcels matter most,
+    which ones fit, and the order in which to visit customers.</p>
+</div>
+
+<div class="section">
+  <div class="section-head"><h2>Pipeline</h2><p>Each stage feeds the next and is timed separately</p></div>
+  <div class="flow">
+    <div class="card"><h3>Prioritise</h3><p><span class="tag">Merge sort</span><br>Order parcels by deadline, then priority, then value. Stable, O(n log n) in every case.</p></div>
+    <div class="card"><h3>Pack</h3><p><span class="tag">0/1 knapsack DP</span><br>Pick the parcel set with the highest value that fits the van's capacity. O(n·W).</p></div>
+    <div class="card"><h3>Shortest paths</h3><p><span class="tag">Dijkstra</span><br>From the depot and each stop, find real road distances and paths. O((V+E) log V).</p></div>
+    <div class="card"><h3>Route</h3><p><span class="tag">Nearest neighbour + 2-opt</span><br>Visit the closest unvisited stop next, return to depot, then uncross the tour. O(k²).</p></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-head"><h2>Algorithm selection</h2></div>
+  <div class="card flush"><div class="table-scroll">
+    <table>
+      <thead><tr><th>Stage</th><th>Algorithm</th><th>Why</th><th>Time</th><th>Space</th></tr></thead>
+      <tbody>
+        <tr><td>Prioritise</td><td>Merge sort</td><td class="muted">Guaranteed n log n and stable; compared against insertion, quick and heap sort</td><td class="mono">O(n log n)</td><td class="mono">O(n)</td></tr>
+        <tr><td>Pack</td><td>0/1 knapsack (DP)</td><td class="muted">Parcels can't be split — greedy by ratio is not optimal, DP is exact</td><td class="mono">O(n·W)</td><td class="mono">O(n·W)</td></tr>
+        <tr><td>Shortest paths</td><td>Dijkstra (binary heap)</td><td class="muted">Road distances are non-negative; heap suits sparse graphs</td><td class="mono">O((V+E) log V)</td><td class="mono">O(V)</td></tr>
+        <tr><td>Route</td><td>Nearest-neighbour TSP</td><td class="muted">TSP is NP-hard; NN is a fast polynomial approximation</td><td class="mono">O(k^2)</td><td class="mono">O(k)</td></tr>
+        <tr><td>Improve</td><td>2-opt local search</td><td class="muted">Removes crossings in the NN tour — typically 10–20% shorter</td><td class="mono">O(k^2) / pass</td><td class="mono">O(k)</td></tr>
+      </tbody>
+    </table>
+  </div></div>
+  <p class="small muted">n = parcels, W = capacity in kg, V / E = graph nodes / roads, k = stops on the trip.</p>
+</div>
+
+<div class="section grid-2">
+  <div>
+    <div class="section-head"><h2>Parcel attributes</h2></div>
+    <div class="card flush"><table>
+      <thead><tr><th>Field</th><th>Type</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">id</td><td>str</td><td class="muted">Unique id, e.g. P07</td></tr>
+        <tr><td class="mono">destination</td><td>str</td><td class="muted">Graph node to deliver to</td></tr>
+        <tr><td class="mono">weight</td><td>int</td><td class="muted">kg — indexes the DP table</td></tr>
+        <tr><td class="mono">value</td><td>int</td><td class="muted">Benefit of delivering today</td></tr>
+        <tr><td class="mono">deadline</td><td>int</td><td class="muted">Hours from dispatch</td></tr>
+        <tr><td class="mono">priority</td><td>int</td><td class="muted">1 (low) – 5 (express)</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div>
+    <div class="section-head"><h2>Graph format</h2></div>
+    <div class="card flush"><table>
+      <thead><tr><th>Element</th><th>Fields</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Node</td><td class="mono">id, name, x, y</td><td class="muted">x, y only for drawing</td></tr>
+        <tr><td>Edge</td><td class="mono">from, to, distance</td><td class="muted">Undirected, km ≥ 0</td></tr>
+        <tr><td>Depot</td><td class="mono">depot</td><td class="muted">Start and end of every trip</td></tr>
+        <tr><td>Van</td><td class="mono">capacity</td><td class="muted">Integer kg</td></tr>
+      </tbody>
+    </table></div>
+    <p class="small muted">Stored in memory as an adjacency list — O(V + E) space.</p>
+  </div>
+</div>
+
+<div class="section" id="format">
+  <div class="section-head"><h2>Dataset file</h2><p>Upload a file in this shape on the Planner page</p></div>
+  <pre class="card mono small" style="margin:0; overflow:auto; line-height:1.6">{
+  "name": "small",
+  "depot": "D",
+  "capacity": 24,
+  "nodes":   [{"id": "D", "name": "Depot", "x": 50, "y": 50}, {"id": "A", "name": "Sector 14", "x": 20, "y": 25}],
+  "edges":   [{"from": "D", "to": "A", "distance": 4}],
+  "parcels": [{"id": "P01", "destination": "A", "weight": 5, "value": 50, "deadline": 2, "priority": 5}]
+}</pre>
+</div>
+
+<div class="section prose">
+  <h2>Route-planning logic</h2>
+  <ol>
+    <li>Collect the distinct destinations of the parcels chosen by the knapsack.</li>
+    <li>Run Dijkstra from the depot and from every stop. This turns the sparse road map into a small complete graph over only the points we must visit.</li>
+    <li>Build a tour with nearest neighbour: from the current point, drive to the closest unvisited stop; finally return to the depot.</li>
+    <li>Apply 2-opt: reverse any segment whose reversal shortens the tour, until no such move remains.</li>
+    <li>Expand each leg back into its real road path using Dijkstra's predecessor map, and add up the leg distances.</li>
+  </ol>
+</div>
+
+{% endblock %}
