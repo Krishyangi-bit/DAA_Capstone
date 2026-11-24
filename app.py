@@ -56,7 +56,8 @@ def map_geometry(raw, result):
     nodes = []
     for nid, (x, y) in pos.items():
         kind = "depot" if nid == raw["depot"] else ("stop" if nid in order else "other")
-        nodes.append({"id": nid, "name": names[nid], "x": x, "y": y, "kind": kind,
+        anchor = "end" if x > W * 0.8 else "start"     # keep labels inside the map
+        nodes.append({"id": nid, "name": names[nid], "x": x, "y": y, "kind": kind, "anchor": anchor,
                       "order": order.get(nid), "drops": result["drops"].get(nid, [])})
 
     route_edges = {frozenset(p) for p in zip(result["full_path"], result["full_path"][1:])}

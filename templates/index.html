@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+{% block title %}Planner · Mini-Courier Planner{% endblock %}
+{% block content %}
+
+<div class="page-head">
+  <p class="eyebrow">Capstone · Design &amp; Analysis of Algorithms</p>
+  <h1>Plan today's delivery trip</h1>
+  <p class="lead">Parcels are prioritised with merge sort, packed with 0/1 knapsack dynamic programming,
+    and routed with Dijkstra's shortest paths and a nearest-neighbour tour.</p>
+</div>
+
+<!-- ---------------- input form ---------------- -->
+<form class="card" method="post" enctype="multipart/form-data">
+  <div class="controls">
+    <div class="field">
+      <label for="dataset">Dataset</label>
+      <select id="dataset" name="dataset">
+        {% for s in samples %}
+        <option value="{{ s }}" {{ 'selected' if form.dataset == s }}>{{ s|capitalize }} sample</option>
+        {% endfor %}
+        {% if form.dataset == 'upload' %}<option value="upload" selected>Uploaded file</option>{% endif %}
+      </select>
+    </div>
+    <div class="field">
+      <label for="capacity">Van capacity (kg)</label>
+      <input id="capacity" type="number" name="capacity" min="1" max="5000"
+             placeholder="{{ ds.capacity if ds else 'from dataset' }}" value="{{ form.capacity }}">
+    </div>
+    <div class="field">
+      <label for="sort">Sorting algorithm</label>
+      <select id="sort" name="sort">
+        {% for s in sorts %}
+        <option value="{{ s }}" {{ 'selected' if form.sort == s }}>{{ s|capitalize }} sort{{ ' (default)' if s == 'merge' }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field">
+      <label>&nbsp;</label>
+      <label class="check"><input type="checkbox" name="two_opt" {{ 'checked' if form.two_opt }}> Improve route with 2-opt</label>
+    </div>
+    <div class="field">
+      <label>&nbsp;</label>
+      <button class="btn" type="submit">Run planner</button>
+    </div>
+  </div>
+  <div class="form-foot">
+    <div class="field" style="flex:1; max-width:420px">
+      <label for="upload">Or upload a dataset (JSON)</label>
+      <input id="upload" type="file" name="upload" accept=".json,application/json">
+    </div>
+    <p class="small muted">Format: see <a href="{{ url_for('design') }}#format">Design</a> · download
+      {% for s in samples %}<a href="{{ url_for('download_sample', name=s) }}">{{ s }}</a>{{ ', ' if not loop.last }}{% endfor %}</p>
+  </div>
+  {% if error %}<div class="alert">{{ error }}</div>{% endif %}
+</form>
+
+{% if r %}
+{% set pk = r.packing %}
+
+<!-- ---------------- summary ---------------- -->
+<div class="section">
+  <div class="stats">
+    <div class="stat"><div class="label">Parcels loaded</div>
+      <div class="value">{{ pk.selected|length }}<small>/ {{ ds.parcels|length }}</small></div>
+      <div class="sub">{{ pk.rejected|length }} wait for next trip</div></div>
+    <div class="stat"><div class="label">Van load</div>
+      <div class="value">{{ pk.total_weight }}<small>/ {{ r.capacity }} kg</small></div>
+      <div class="sub">{{ (100 * pk.total_weight / r.capacity)|round(0)|int }}% of capacity</div></div>
+    <div class="stat"><div class="label">Delivered value</div>
+      <div class="value">{{ pk.total_value }}</div>
+      <div class="sub">greedy would give {{ r.greedy.total_value }}</div></div>
+    <div class="stat"><div class="label">Route length</div>
+      <div class="value">{{ r.route_length }}<small>km</small></div>
+      <div class="sub">{{ r.stops|length }} stops · {{ r.full_path|length - 1 }} road segments</div></div>
+    <div class="stat"><div class="label">Planning time</div>
+      <div class="value">{{ '%.2f'|format(r.timings_ms.total) }}<small>ms</small></div>
+      <div class="sub">{{ r.graph.nodes }} nodes · {{ r.graph.edges }} roads</div></div>
+  </div>
+</div>
+
+<!-- ---------------- parcels ---------------- -->
+<div class="section">
+  <div class="section-head">
+    <h2><span class="step">01</span>Prioritised parcels</h2>
+    <p>{{ r.sort_algorithm|capitalize }} sort by deadline ↑, priority ↓, value ↓ · {{ '%.3f'|format(r.timings_ms.sorting) }} ms</p>
+  </div>
+  <div class="card flush">
+    <div class="table-scroll tall">
+      <table>
+        <thead><tr><th>Rank</th><th>Parcel</th><th>Destination</th><th class="num">Weight</th><th class="num">Value</th><th class="num">Deadline</th><th>Priority</th><th>Status</th></tr></thead>
+        <tbody>
+        {% for p in r.sorted_parcels %}
+          <tr>
+            <td class="muted">{{ loop.index }}</td>
+            <td class="mono">{{ p.id }}</td>
+            <td>{{ names[p.destination] }} <span class="muted mono">{{ p.destination }}</span></td>
+            <td class="num">{{ p.weight }} kg</td>
+            <td class="num">{{ p.value }}</td>
+            <td class="num">{{ p.deadline }} h</td>
+            <td><span class="prio" title="priority {{ p.priority }}">{% for i in range(5) %}<i class="{{ 'f' if i < p.priority }}"></i>{% endfor %}</span></td>
+            <td>{% if p.id in selected_ids %}<span class="pill on">Loaded</span>{% else %}<span class="pill">Next trip</span>{% endif %}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ---------------- knapsack ---------------- -->
+<div class="section">
+  <div class="section-head">
+    <h2><span class="step">02</span>Packing plan</h2>
+    <p>0/1 knapsack · O(n·W) = {{ ds.parcels|length }} × {{ r.capacity }} cells · {{ '%.3f'|format(r.timings_ms.knapsack) }} ms</p>
+  </div>
+  <div class="compare">
+    <div><div class="k">Dynamic programming (optimal)</div><div class="v">{{ pk.total_value }} value · {{ pk.total_weight }} kg</div>
+      <p class="small muted" style="margin:6px 0 0">{{ pk.selected|map(attribute='id')|join(', ') }}</p></div>
+    <div><div class="k">Greedy by value / weight (baseline)</div><div class="v">{{ r.greedy.total_value }} value · {{ r.greedy.total_weight }} kg</div>
+      <p class="small muted" style="margin:6px 0 0">{{ r.greedy.selected|map(attribute='id')|join(', ') }}</p></div>
+  </div>
+
+  <div class="card flush" style="margin-top:16px">
+    <div style="padding:14px 20px; border-bottom:1px solid var(--line)">
+      <h3 style="margin:0">DP table <span class="muted small" style="font-weight:400">
+        — dp[i][w] = best value using the first i parcels with capacity w
+        {% if not dp.full %}(showing {{ dp.cols|length }} capacity columns, first {{ dp.rows|length - 1 }} of {{ dp.total_rows }} rows){% endif %}</span></h3>
+    </div>
+    <div class="table-scroll">
+      <table class="dp">
+        <thead><tr><th>i \ w</th>{% for w in dp.cols %}<th>{{ w }}</th>{% endfor %}</tr></thead>
+        <tbody>
+        {% for row in dp.rows %}
+          {% set last_row = loop.last and dp.full %}
+          <tr class="{{ 'taken' if row.taken }}">
+            <td>{{ row.label }}</td>
+            {% for c in row.cells %}<td class="{{ 'final' if last_row and loop.last }}{{ ' zero' if c == 0 }}">{{ c }}</td>{% endfor %}
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ---------------- map + route ---------------- -->
+<div class="section">
+  <div class="section-head">
+    <h2><span class="step">03</span>Delivery route</h2>
+    <p>Dijkstra between every pair of stops, then nearest-neighbour{{ ' + 2-opt' if form.two_opt }}</p>
+  </div>
+  <div class="card map-card">
+    <svg class="map" viewBox="0 0 {{ geo.w }} {{ geo.h }}" role="img" aria-label="Map of the delivery route">
+      {% for e in geo.edges %}
+      <line class="road{{ ' on' if e.on_route }}" x1="{{ e.x1 }}" y1="{{ e.y1 }}" x2="{{ e.x2 }}" y2="{{ e.y2 }}"/>
+      {% endfor %}
+      <polyline class="route" points="{{ geo.route }}"/>
+      {% for n in geo.nodes|sort(attribute='kind', reverse=True) %}
+      <g class="pt">
+        <title>{{ n.id }} · {{ n.name }}{% if n.order %} — stop {{ n.order }}, drop {{ n.drops|join(', ') }}{% endif %}</title>
+        {% if n.kind == 'depot' %}
+          <rect class="node-depot" x="{{ n.x - 11 }}" y="{{ n.y - 11 }}" width="22" height="22" rx="5"/>
+          <text class="order" x="{{ n.x }}" y="{{ n.y }}">D</text>
+        {% elif n.kind == 'stop' %}
+          <circle class="node-stop" cx="{{ n.x }}" cy="{{ n.y }}" r="11"/>
+          <text class="order" x="{{ n.x }}" y="{{ n.y }}">{{ n.order }}</text>
+        {% else %}
+          <circle class="node-other" cx="{{ n.x }}" cy="{{ n.y }}" r="{{ 6 if geo.small else 3.5 }}"/>
+        {% endif %}
+        {% if geo.small %}<text class="label" x="{{ n.x - 16 if n.anchor == 'end' else n.x + 16 }}" y="{{ n.y - 14 }}" text-anchor="{{ n.anchor }}">{{ n.name }}</text>{% endif %}
+      </g>
+      {% endfor %}
+    </svg>
+    <div class="map-legend">
+      <span><i class="sw depot"></i>Depot</span>
+      <span><i class="sw stop"></i>Stop (visit order)</span>
+      <span><i class="sw other"></i>Other junction</span>
+      <span><i class="sw line"></i>Route</span>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top:16px">
+    <div class="card">
+      <h3>Nearest-neighbour tour</h3>
+      <div class="sequence">
+        {% for s in r.nn_tour %}<span class="stop{{ ' depot' if s == ds.depot }}">{{ s }}</span>{% if not loop.last %}<span class="arrow">→</span>{% endif %}{% endfor %}
+      </div>
+      <p class="small muted" style="margin:12px 0 0">Length {{ r.nn_length }} km</p>
+    </div>
+    <div class="card">
+      <h3>{{ 'After 2-opt (final route)' if form.two_opt else 'Final route' }}</h3>
+      <div class="sequence">
+        {% for s in r.tour %}<span class="stop{{ ' depot' if s == ds.depot }}">{{ s }}</span>{% if not loop.last %}<span class="arrow">→</span>{% endif %}{% endfor %}
+      </div>
+      <p class="small muted" style="margin:12px 0 0">Length {{ r.route_length }} km
+        {% if r.nn_length > r.route_length %} · {{ (100 * (1 - r.route_length / r.nn_length))|round(1) }}% shorter{% endif %}</p>
+    </div>
+  </div>
+
+  <div class="card flush" style="margin-top:16px">
+    <div class="table-scroll tall">
+      <table>
+        <thead><tr><th>#</th><th>Leg</th><th class="num">Distance</th><th>Road path (Dijkstra)</th><th>Drop off</th></tr></thead>
+        <tbody>
+        {% for leg in r.legs %}
+          <tr>
+            <td class="muted">{{ loop.index }}</td>
+            <td class="mono">{{ leg.from }} → {{ leg.to }}</td>
+            <td class="num">{{ '%.1f'|format(leg.distance) }} km</td>
+            <td class="mono muted">{{ leg.path|join(' › ') }}</td>
+            <td>{% for pid in r.drops.get(leg.to, []) %}<span class="pill on">{{ pid }}</span> {% endfor %}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot><tr><td></td><td><strong>Total</strong></td><td class="num"><strong>{{ r.route_length }} km</strong></td><td colspan="2"></td></tr></tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ---------------- timings ---------------- -->
+<div class="section">
+  <div class="section-head">
+    <h2><span class="step">04</span>Runtime of each stage</h2>
+    <p>Measured with time.perf_counter on this run · <a href="{{ url_for('performance') }}">full benchmarks</a></p>
+  </div>
+  {% set stages = [('sorting','Sorting'),('knapsack','Knapsack DP'),('dijkstra','Dijkstra'),('tsp_nn','NN tour'),('two_opt','2-opt')] %}
+  {% set ns = namespace(mx=0.0001) %}
+  {% for key, _ in stages %}{% if r.timings_ms[key] > ns.mx %}{% set ns.mx = r.timings_ms[key] %}{% endif %}{% endfor %}
+  <div class="card">
+    {% for key, label in stages %}
+    <div class="timing">
+      <span>{{ label }}</span>
+      <div class="bar"><span style="width: {{ (100 * r.timings_ms[key] / ns.mx)|round(1) }}%"></span></div>
+      <span class="ms">{{ '%.3f'|format(r.timings_ms[key]) }} ms</span>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}
