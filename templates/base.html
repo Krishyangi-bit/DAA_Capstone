@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Mini-Courier Planner{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="{{ url_for('index') }}"><span class="brand-mark"></span>Mini-Courier Planner</a>
+      <nav class="nav">
+        <a href="{{ url_for('index') }}" class="{{ 'active' if request.endpoint == 'index' }}">Planner</a>
+        <a href="{{ url_for('performance') }}" class="{{ 'active' if request.endpoint == 'performance' }}">Performance</a>
+        <a href="{{ url_for('design') }}" class="{{ 'active' if request.endpoint == 'design' }}">Design</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">Design &amp; Analysis of Algorithms (ETCCDA302) · Capstone — sorting, dynamic programming, Dijkstra and TSP approximation</div>
+  </footer>
+</body>
+</html>
