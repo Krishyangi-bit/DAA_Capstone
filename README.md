@@ -13,7 +13,7 @@ It combines four algorithm families from the lab assignments:
 | Shortest road paths | Dijkstra with a binary heap | [courier/graph.py](courier/graph.py) |
 | Visiting order | Nearest-neighbour TSP approximation + 2-opt | [courier/tsp.py](courier/tsp.py) |
 
-![Planner](docs/screenshots/planner-top.png)
+![CLI output](docs/screenshots/cli-small.png)
 
 ---
 
@@ -24,13 +24,14 @@ git clone https://github.com/Krishyangi-bit/DAA_Capstone.git
 cd DAA_Capstone
 pip install -r requirements.txt          # flask, matplotlib
 
-python app.py                            # website  -> http://127.0.0.1:5000
+python app.py                            # JSON API -> http://127.0.0.1:5000/api/plan
 python main.py                           # command line, small dataset
 python -m unittest discover tests -v     # correctness tests
 python benchmark.py                      # runtime experiments + charts (~20 s)
 ```
 
-Python 3.9+ is required. The algorithms themselves use only the standard library.
+Python 3.9+ is required. The algorithms themselves use only the standard library;
+Flask is used only for the JSON API and matplotlib only for the benchmark charts.
 
 ### Command-line options
 
@@ -42,14 +43,23 @@ python main.py data/small.json --show-table             # print the full DP tabl
 python data/generate.py --nodes 80 --parcels 120 --capacity 60 --out data/custom.json
 ```
 
-### Website
+### JSON API
 
-| Page | What it shows |
+`python app.py` starts a backend-only API (no web pages):
+
+| Endpoint | Description |
 |---|---|
-| **Planner** `/` | Choose a sample or upload a JSON dataset, set capacity / sort / 2-opt, and see the sorted parcels, DP table, DP-vs-greedy comparison, route map, road-level legs and stage timings. Shareable links work too: `/?dataset=large&sort=quick&capacity=80` |
-| **Performance** `/performance` | Benchmark charts and tables from `results/benchmark.json` |
-| **Design** `/design` | Data model, algorithm choices and route logic |
-| **API** `/api/plan?dataset=small` | JSON result (or `POST` a dataset) |
+| `GET /api/datasets` | List the sample datasets |
+| `GET /api/plan?dataset=small` | Run the planner on a sample. Optional: `&capacity=30&sort=quick&two_opt=off` |
+| `POST /api/plan` | Run the planner on a dataset sent as the JSON body |
+| `GET /api/benchmark` | Saved Phase 4 benchmark results |
+
+```bash
+curl "http://127.0.0.1:5000/api/plan?dataset=large&sort=quick"
+curl -X POST -H "Content-Type: application/json" --data @data/medium.json http://127.0.0.1:5000/api/plan
+```
+
+Invalid input returns HTTP 400 with an `error` message.
 
 ---
 
@@ -65,14 +75,13 @@ courier/
   planner.py     the integrated, timed pipeline
 data/            small.json, medium.json, large.json, generate.py
 tests/           unit tests against brute-force references
-templates/, static/   website (Flask + plain HTML/CSS, no JS framework)
 docs/
   design.md      Phase 1 design document
   charts/        runtime charts (Phase 4)
-  screenshots/   website screenshots (Phase 5)
+  screenshots/   terminal output screenshots (Phase 5)
   traces/        CLI output traces and test log (Phase 5)
 results/         benchmark.json
-main.py          CLI      app.py   website      benchmark.py   Phase 4 experiments
+main.py          CLI      app.py   JSON API     benchmark.py   Phase 4 experiments
 ```
 
 ---
@@ -114,7 +123,7 @@ Legs  : D>A 4.0 | A>B 3.0 | B>C>E 8.0 | E>F 3.0 | F>G 4.0 | G>D 4.0
 
 On the large dataset (42 stops) nearest neighbour gives 966.8 km and **2-opt shortens it to 764.7 km (−20.9%)**.
 
-![Large dataset route](docs/screenshots/planner-large.png)
+![Large dataset run](docs/screenshots/cli-large.png)
 
 ## Phase 4 — Performance testing
 
@@ -164,8 +173,9 @@ force over all subsets, Dijkstra against Bellman-Ford, and the TSP heuristics ag
 
 ## Phase 5 — Demonstration
 
-- Screenshots: [planner (small)](docs/screenshots/planner-small.png), [planner (large)](docs/screenshots/planner-large.png),
-  [performance](docs/screenshots/performance.png), [design](docs/screenshots/design.png)
+- Screenshots: [CLI — small](docs/screenshots/cli-small.png), [CLI — large](docs/screenshots/cli-large.png),
+  [CLI — custom options](docs/screenshots/cli-options.png), [unit tests](docs/screenshots/tests.png),
+  [benchmark run](docs/screenshots/benchmark.png), [JSON API](docs/screenshots/api.png)
 - Output traces: [small](docs/traces/small.txt), [medium](docs/traces/medium.txt), [large](docs/traces/large.txt),
   [small, 15 kg, quick sort, no 2-opt](docs/traces/small-capacity15-quick-no2opt.txt)
 
